@@ -60,9 +60,12 @@ spec:
 
   strategy:
     canary:
+      canaryService: {{ .Release.Name }}-canary
       steps:
         - setWeight: 25
-        - pause: {}
+        - analysis:
+            templates:
+              - templateName: {{ .Release.Name }}-smoke-test
 
         - setWeight: 50
         - pause: {}
