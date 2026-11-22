@@ -1,0 +1,18 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/k8-consultant/devsecops-api
+  tag: "9a3d253ba2ab261caeff2c873a31b89388d13216"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
