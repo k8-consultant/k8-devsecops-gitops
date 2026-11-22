@@ -1,18 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+
 metadata:
   name: {{ .Release.Name }}
-  labels:
-    app: {{ .Release.Name }}
+
 spec:
   replicas: {{ .Values.replicaCount }}
+
+  revisionHistoryLimit: 3
+
   selector:
     matchLabels:
       app: {{ .Release.Name }}
+
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}
+
     spec:
       securityContext:
         runAsNonRoot: true
@@ -20,26 +26,45 @@ spec:
         runAsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
+
       containers:
-        - name: api
+        - name: devsecops-api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           ports:
             - containerPort: 8000
+
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
+
           readinessProbe:
             httpGet:
               path: /health
               port: 8000
+            initialDelaySeconds: 2
             periodSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /health
               port: 8000
+            initialDelaySeconds: 5
             periodSeconds: 10
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: {}
+
+        - setWeight: 50
+        - pause: {}
+
+        - setWeight: 100
