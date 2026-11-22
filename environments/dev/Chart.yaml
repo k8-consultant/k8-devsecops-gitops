@@ -1,0 +1,6 @@
+apiVersion: v2
+name: devsecops-api
+description: FastAPI DevSecOps lab application Helm chart managed by Argo CD
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
