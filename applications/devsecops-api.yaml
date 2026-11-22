@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devsecops-api
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/k8-consultant/k8-devsecops-gitops.git
+    targetRevision: main
+    path: environments/dev
+    helm:
+      releaseName: devsecops-api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: devsecops
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
