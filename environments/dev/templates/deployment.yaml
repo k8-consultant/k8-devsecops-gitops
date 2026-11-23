@@ -59,15 +59,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
 
   strategy:
-    canary:
-      canaryService: {{ .Release.Name }}-canary
-      steps:
-        - setWeight: 25
-        - analysis:
-            templates:
-              - templateName: {{ .Release.Name }}-smoke-test
-
-        - setWeight: 50
-        - pause: {}
-
-        - setWeight: 100
+    blueGreen:
+      activeService: {{ .Release.Name }}
+      previewService: {{ .Release.Name }}-preview
+      autoPromotionEnabled: false
