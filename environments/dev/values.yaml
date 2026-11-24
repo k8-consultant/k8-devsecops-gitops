@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: ghcr.io/k8-consultant/devsecops-api
-  tag: "7a3f9bd0eca39abc2125bc9da35fde72b64c4f97"
+  tag: "6fb0e46d18dc274eb22b21021c94f9b635bd509a"
   pullPolicy: IfNotPresent
 
 service:
